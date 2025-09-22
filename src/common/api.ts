@@ -14,7 +14,7 @@ api.interceptors.request.use(
   (config) => {
     // Get token from localStorage (client-side only)
     if (typeof window !== 'undefined') {
-      const token = localStorage.getItem('authToken');
+      const token = localStorage.getItem('access_token');
       if (token && config.headers) {
         config.headers.Authorization = `Bearer ${token}`;
       }
@@ -26,12 +26,12 @@ api.interceptors.request.use(
 
 // Response interceptor to handle common errors
 api.interceptors.response.use(
-  (response: AxiosResponse) => response,
+  (response: AxiosResponse) => response.data,
   (error: AxiosError) => {
     if (error.response?.status === 401) {
       // Handle unauthorized - clear token and redirect to login
       if (typeof window !== 'undefined') {
-        localStorage.removeItem('authToken');
+        localStorage.removeItem('access_token');
         console.log('Unauthorized access - token cleared');
       }
     }

@@ -5,7 +5,7 @@ import { useRouter } from "next/navigation";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import Logo from "@/components/logo";
-import { login } from "@/features/auth/authSlice";
+import { signIn } from "@/features/auth/authThunks";
 import { useAppDispatch, useAppSelector } from "@/common/store/hooks";
 import Link from "next/link";
 
@@ -19,7 +19,7 @@ export default function SignIn() {
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     try {
-      await dispatch(login({ email, password })).unwrap();
+      await dispatch(signIn({ email, password })).unwrap();
       router.push("/");
     } catch {
       // Error is handled in the slice

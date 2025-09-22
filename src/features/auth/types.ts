@@ -26,6 +26,7 @@ export interface User {
 
 export interface AuthState {
   user: User | null;
+  access_token: string | null;
   isLoading: boolean;
   error: string | null;
   isAuthenticated: boolean;
@@ -39,4 +40,9 @@ export interface LoginCredentials {
 export interface RegisterData {
   email: string;
   password: string;
+}
+
+export interface AuthResponse {
+  user: User;
+  access_token: string;
 } 

@@ -1,37 +1,11 @@
-import { createSlice, createAsyncThunk, PayloadAction } from '@reduxjs/toolkit';
-import axios from 'axios';
-import { User, AuthState, LoginCredentials, RegisterData } from './types';
-
-// Async thunks
-export const login = createAsyncThunk(
-  'auth/login',
-  async (credentials: LoginCredentials, { rejectWithValue }) => {
-    try {
-      // Replace with your API endpoint
-      const response = await axios.post('/api/auth/login', credentials);
-      return response.data as User;
-    } catch (error: unknown) {
-      return rejectWithValue(error instanceof Error ? error.message : 'Login failed');
-    }
-  }
-);
-
-export const register = createAsyncThunk(
-  'auth/register',
-  async (userData: RegisterData, { rejectWithValue }) => {
-    try {
-      // Replace with your API endpoint
-      const response = await axios.post('/api/auth/register', userData);
-      return response.data as User;
-    } catch (error: unknown) {
-      return rejectWithValue(error instanceof Error ? error.message : 'Registration failed');
-    }
-  }
-);
+import { createSlice, PayloadAction } from '@reduxjs/toolkit';
+import { AuthResponse, AuthState } from './types';
+import { signIn, signUp } from './authThunks';
 
 // Initial state
 const initialState: AuthState = {
   user: null,
+  access_token: null,
   isLoading: false,
   error: null,
   isAuthenticated: false,
@@ -44,39 +18,43 @@ const authSlice = createSlice({
   reducers: {
     logout: (state) => {
       state.user = null;
+      state.access_token = null;
       state.isAuthenticated = false;
       state.error = null;
     },
   },
   extraReducers: (builder) => {
     builder
-      .addCase(login.pending, (state) => {
+      .addCase(signIn.pending, (state) => {
         state.isLoading = true;
         state.error = null;
       })
-      .addCase(login.fulfilled, (state, action: PayloadAction<User>) => {
+      .addCase(signIn.fulfilled, (state, action: PayloadAction<AuthResponse>) => {
         state.isLoading = false;
         state.isAuthenticated = true;
-        state.user = action.payload;
+        state.user = action.payload.user;
+        state.access_token = action.payload.access_token;
         state.error = null;
+        localStorage.setItem('access_token', action.payload.access_token);
       })
-      .addCase(login.rejected, (state, action) => {
+      .addCase(signIn.rejected, (state, action) => {
         state.isLoading = false;
         state.error = action.payload as string;
         state.isAuthenticated = false;
         state.user = null;
       })
-      .addCase(register.pending, (state) => {
+      .addCase(signUp.pending, (state) => {
         state.isLoading = true;
         state.error = null;
       })
-      .addCase(register.fulfilled, (state, action: PayloadAction<User>) => {
+      .addCase(signUp.fulfilled, (state, action: PayloadAction<AuthResponse>) => {
         state.isLoading = false;
         state.isAuthenticated = true;
-        state.user = action.payload;
+        state.user = action.payload.user;
+        state.access_token = action.payload.access_token;
         state.error = null;
       })
-      .addCase(register.rejected, (state, action) => {
+      .addCase(signUp.rejected, (state, action) => {
         state.isLoading = false;
         state.error = action.payload as string;
         state.isAuthenticated = false;

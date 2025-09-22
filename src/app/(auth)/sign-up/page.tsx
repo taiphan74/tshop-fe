@@ -4,7 +4,7 @@ import { useState } from "react";
 import { useRouter } from "next/navigation";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
-import { register } from "@/features/auth/authSlice";
+import { signUp } from "@/features/auth/authThunks";
 import { useAppDispatch, useAppSelector } from "@/common/store/hooks";
 import Logo from "@/components/logo";
 import Link from "next/link";
@@ -21,7 +21,7 @@ export default function SignUp() {
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     try {
-      await dispatch(register({ email, password })).unwrap();
+      await dispatch(signUp({ email, password })).unwrap();
       router.push("/");
     } catch {
       // Error is handled in the slice
