@@ -4,8 +4,10 @@ import { useState } from 'react';
 import { useRouter } from 'next/navigation';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
+import Logo from '@/components/logo';
 import { login } from '@/features/auth/authSlice';
 import { useAppDispatch, useAppSelector } from '@/common/store/hooks';
+import Link from 'next/link';
 
 export default function SignIn() {
   const [email, setEmail] = useState('');
@@ -27,39 +29,31 @@ export default function SignIn() {
   return (
     <div className="min-h-screen flex items-center justify-center bg-gray-50">
       <div className="max-w-md w-full space-y-8 p-8 bg-white rounded-lg shadow-md">
-        <div>
-          <h2 className="mt-6 text-center text-3xl font-extrabold text-gray-900">
-            Đăng nhập vào tài khoản của bạn
-          </h2>
-        </div>
+        <Logo />
         <form className="mt-8 space-y-6" onSubmit={handleSubmit}>
           <div className="space-y-4">
             <div>
-              <label htmlFor="email" className="block text-sm font-medium text-gray-700">
-                Địa chỉ email
-              </label>
               <Input
-                id="email"
-                name="email"
-                type="email"
-                required
-                value={email}
-                onChange={(e) => setEmail(e.target.value)}
-                className="mt-1"
+              id="email"
+              name="email"
+              type="email"
+              required
+              placeholder="Địa chỉ email"
+              value={email}
+              onChange={(e) => setEmail(e.target.value)}
+              className="mt-1 h-12 rounded-lg"
               />
             </div>
             <div>
-              <label htmlFor="password" className="block text-sm font-medium text-gray-700">
-                Mật khẩu
-              </label>
               <Input
-                id="password"
-                name="password"
-                type="password"
-                required
-                value={password}
-                onChange={(e) => setPassword(e.target.value)}
-                className="mt-1"
+              id="password"
+              name="password"
+              type="password"
+              required
+              placeholder="Mật khẩu"
+              value={password}
+              onChange={(e) => setPassword(e.target.value)}
+              className="mt-1 h-12 rounded-lg"
               />
             </div>
           </div>
@@ -72,15 +66,15 @@ export default function SignIn() {
             <Button
               type="submit"
               disabled={isLoading}
-              className="w-full"
+              className="w-full h-12 rounded-lg"
             >
               {isLoading ? 'Đang đăng nhập...' : 'Đăng nhập'}
             </Button>
           </div>
           <div className="text-center">
-            <a href="/sign-up" className="text-sm text-blue-600 hover:text-blue-500">
+            <Link href="/sign-up" className="text-sm text-blue-600 hover:text-blue-500">
               Chưa có tài khoản? Đăng ký
-            </a>
+            </Link>
           </div>
         </form>
       </div>
