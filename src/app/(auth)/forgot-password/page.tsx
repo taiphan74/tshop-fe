@@ -3,6 +3,12 @@
 import { useState } from "react";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
+import {
+  InputOTP,
+  InputOTPGroup,
+  InputOTPSeparator,
+  InputOTPSlot,
+} from "@/components/ui/input-otp";
 import Logo from "@/components/logo";
 import Link from "next/link";
 
@@ -33,8 +39,8 @@ export default function ForgotPassword() {
                 className="mt-1 h-12 rounded-lg"
               />
             </div>
-            <div>
-              <Input
+            <div className="flex justify-between space-x-2">
+                <Input
                 id="otp"
                 name="otp"
                 type="text"
@@ -42,8 +48,15 @@ export default function ForgotPassword() {
                 placeholder="Mã OTP"
                 value={otp}
                 onChange={(e) => setOtp(e.target.value)}
-                className="mt-1 h-12 rounded-lg"
-              />
+                className="h-12 rounded-lg"
+                />
+              <Button
+                type="button"
+                variant="ghost"
+                className="h-12 px-4 rounded-lg"
+              >
+                Gửi mã
+              </Button>
             </div>
           </div>
           {/* {error && (

@@ -13,6 +13,7 @@ export default function SignUp() {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [confirmPassword, setConfirmPassword] = useState("");
+  const [otp, setOtp] = useState(""); 
   const dispatch = useAppDispatch();
   const router = useRouter();
   const { isLoading, error } = useAppSelector((state) => state.auth);
@@ -68,6 +69,25 @@ export default function SignUp() {
                 onChange={(e) => setConfirmPassword(e.target.value)}
                 className="mt-1 h-12 rounded-lg"
               />
+            </div>
+             <div className="flex justify-between space-x-2">
+                <Input
+                id="otp"
+                name="otp"
+                type="text"
+                required
+                placeholder="Mã OTP"
+                value={otp}
+                onChange={(e) => setOtp(e.target.value)}
+                className="h-12 rounded-lg"
+                />
+              <Button
+                type="button"
+                variant="ghost"
+                className="h-12 px-4 rounded-lg"
+              >
+                Gửi mã
+              </Button>
             </div>
           </div>
           {error && (
