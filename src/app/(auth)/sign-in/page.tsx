@@ -29,14 +29,14 @@ export default function SignIn() {
       <div className="max-w-md w-full space-y-8 p-8 bg-white rounded-lg shadow-md">
         <div>
           <h2 className="mt-6 text-center text-3xl font-extrabold text-gray-900">
-            Sign in to your account
+            Đăng nhập vào tài khoản của bạn
           </h2>
         </div>
         <form className="mt-8 space-y-6" onSubmit={handleSubmit}>
           <div className="space-y-4">
             <div>
               <label htmlFor="email" className="block text-sm font-medium text-gray-700">
-                Email address
+                Địa chỉ email
               </label>
               <Input
                 id="email"
@@ -50,7 +50,7 @@ export default function SignIn() {
             </div>
             <div>
               <label htmlFor="password" className="block text-sm font-medium text-gray-700">
-                Password
+                Mật khẩu
               </label>
               <Input
                 id="password"
@@ -74,12 +74,12 @@ export default function SignIn() {
               disabled={isLoading}
               className="w-full"
             >
-              {isLoading ? 'Signing in...' : 'Sign in'}
+              {isLoading ? 'Đang đăng nhập...' : 'Đăng nhập'}
             </Button>
           </div>
           <div className="text-center">
             <a href="/sign-up" className="text-sm text-blue-600 hover:text-blue-500">
-              Don&apos;t have an account? Sign up
+              Chưa có tài khoản? Đăng ký
             </a>
           </div>
         </form>
