@@ -4,6 +4,7 @@ import { useState } from "react";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import Logo from "@/components/logo";
+import Link from "next/link";
 
 export default function ForgotPassword() {
   const [email, setEmail] = useState("");
@@ -54,6 +55,14 @@ export default function ForgotPassword() {
             <Button type="submit" className="w-full h-12 rounded-lg">
               Gửi
             </Button>
+          </div>
+          <div className="text-center">
+            <Link
+              href="/sign-in"
+              className="text-sm text-blue-600 hover:text-blue-500"
+            >
+              Đã có tài khoản? Đăng nhập
+            </Link>
           </div>
         </form>
       </div>
