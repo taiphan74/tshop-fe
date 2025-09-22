@@ -9,6 +9,17 @@ const api: AxiosInstance = axios.create({
   },
 });
 
+// Flag to prevent multiple refresh attempts
+let isRefreshing = false;
+
+// Function to refresh token
+const refreshToken = async () => {
+  const response = await api.post('/auth/refresh');
+  const { access_token } = response.data;
+  localStorage.setItem('access_token', access_token);
+  return access_token;
+};
+
 // Request interceptor to add auth token
 api.interceptors.request.use(
   (config) => {
@@ -27,12 +38,26 @@ api.interceptors.request.use(
 // Response interceptor to handle common errors
 api.interceptors.response.use(
   (response: AxiosResponse) => response.data,
-  (error: AxiosError) => {
-    if (error.response?.status === 401) {
-      // Handle unauthorized - clear token and redirect to login
-      if (typeof window !== 'undefined') {
-        localStorage.removeItem('access_token');
-        console.log('Unauthorized access - token cleared');
+  async (error: AxiosError) => {
+    const originalRequest = error.config;
+    if (error.response?.status === 401 && originalRequest) {
+      if (!isRefreshing) {
+        isRefreshing = true;
+        try {
+          await refreshToken();
+          isRefreshing = false;
+          // Retry the original request with new token
+          originalRequest.headers.Authorization = `Bearer ${localStorage.getItem('access_token')}`;
+          return api(originalRequest);
+        } catch (refreshError) {
+          isRefreshing = false;
+          // Clear tokens on refresh failure
+          localStorage.removeItem('access_token');
+          return Promise.reject(refreshError);
+        }
+      } else {
+        // If already refreshing, reject to avoid queue
+        return Promise.reject(error);
       }
     }
     return Promise.reject(error);
