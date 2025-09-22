@@ -1,6 +1,6 @@
-import { createSlice, PayloadAction } from '@reduxjs/toolkit';
-import { AuthResponse, AuthState } from './types';
-import { signIn, signUp } from './authThunks';
+import { createSlice, PayloadAction } from "@reduxjs/toolkit";
+import { AuthResponse, AuthState } from "./types";
+import { signIn, signUp } from "./authThunks";
 
 // Initial state
 const initialState: AuthState = {
@@ -13,7 +13,7 @@ const initialState: AuthState = {
 
 // Create the slice
 const authSlice = createSlice({
-  name: 'auth',
+  name: "auth",
   initialState,
   reducers: {
     logout: (state) => {
@@ -29,14 +29,17 @@ const authSlice = createSlice({
         state.isLoading = true;
         state.error = null;
       })
-      .addCase(signIn.fulfilled, (state, action: PayloadAction<AuthResponse>) => {
-        state.isLoading = false;
-        state.isAuthenticated = true;
-        state.user = action.payload.user;
-        state.access_token = action.payload.access_token;
-        state.error = null;
-        localStorage.setItem('access_token', action.payload.access_token);
-      })
+      .addCase(
+        signIn.fulfilled,
+        (state, action: PayloadAction<AuthResponse>) => {
+          state.isLoading = false;
+          state.isAuthenticated = true;
+          state.user = action.payload.user;
+          state.access_token = action.payload.access_token;
+          state.error = null;
+          localStorage.setItem("access_token", action.payload.access_token);
+        }
+      )
       .addCase(signIn.rejected, (state, action) => {
         state.isLoading = false;
         state.error = action.payload as string;
@@ -47,13 +50,17 @@ const authSlice = createSlice({
         state.isLoading = true;
         state.error = null;
       })
-      .addCase(signUp.fulfilled, (state, action: PayloadAction<AuthResponse>) => {
-        state.isLoading = false;
-        state.isAuthenticated = true;
-        state.user = action.payload.user;
-        state.access_token = action.payload.access_token;
-        state.error = null;
-      })
+      .addCase(
+        signUp.fulfilled,
+        (state, action: PayloadAction<AuthResponse>) => {
+          state.isLoading = false;
+          state.isAuthenticated = true;
+          state.user = action.payload.user;
+          state.access_token = action.payload.access_token;
+          state.error = null;
+          localStorage.setItem("access_token", action.payload.access_token);
+        }
+      )
       .addCase(signUp.rejected, (state, action) => {
         state.isLoading = false;
         state.error = action.payload as string;

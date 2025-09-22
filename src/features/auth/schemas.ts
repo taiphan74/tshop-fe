@@ -24,13 +24,13 @@ export const userSchema = z.object({
 // Login schema
 export const loginSchema = z.object({
   email: z.string().email('Email không hợp lệ'),
-  password: z.string().min(6, 'Mật khẩu phải ít nhất 6 ký tự'),
+  password: z.string(),
 });
 
 // Register schema
 export const registerSchema = z.object({
   email: z.string().email('Email không hợp lệ'),
-  password: z.string().min(6, 'Mật khẩu phải ít nhất 6 ký tự'),
+  password: z.string(),
 });
 
 // Type exports

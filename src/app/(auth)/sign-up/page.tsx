@@ -13,13 +13,23 @@ export default function SignUp() {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [confirmPassword, setConfirmPassword] = useState("");
-  const [otp, setOtp] = useState(""); 
+  const [formError, setFormError] = useState("");
   const dispatch = useAppDispatch();
   const router = useRouter();
   const { isLoading, error } = useAppSelector((state) => state.auth);
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
+    
+    // Clear previous form errors
+    setFormError("");
+    
+    // Validate passwords match
+    if (password !== confirmPassword) {
+      setFormError("Mật khẩu xác nhận không khớp");
+      return;
+    }
+    
     try {
       await dispatch(signUp({ email, password })).unwrap();
       router.push("/");
@@ -70,28 +80,11 @@ export default function SignUp() {
                 className="mt-1 h-12 rounded-lg"
               />
             </div>
-             <div className="flex justify-between space-x-2">
-                <Input
-                id="otp"
-                name="otp"
-                type="text"
-                required
-                placeholder="Mã OTP"
-                value={otp}
-                onChange={(e) => setOtp(e.target.value)}
-                className="h-12 rounded-lg"
-                />
-              <Button
-                type="button"
-                variant="ghost"
-                className="h-12 px-4 rounded-lg"
-              >
-                Gửi mã
-              </Button>
-            </div>
           </div>
-          {error && (
-            <div className="text-red-600 text-sm text-center">{error}</div>
+          {(error || formError) && (
+            <div className="text-red-600 text-sm text-center">
+              {formError || error}
+            </div>
           )}
           <div>
             <Button
