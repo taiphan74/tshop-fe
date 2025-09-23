@@ -49,6 +49,13 @@ export const forgotPasswordSchema = z.object({
   email: z.string().email('Email không hợp lệ'),
 });
 
+// Reset password schema
+export const resetPasswordSchema = z.object({
+  email: z.string().email('Email không hợp lệ'),
+  otp: z.string().length(6, 'OTP phải đúng 6 ký tự'),
+  password: z.string().min(6, 'Mật khẩu phải có ít nhất 6 ký tự'),
+});
+
 // Type exports
 export type User = z.infer<typeof userSchema>;
 export type LoginFormData = z.infer<typeof loginSchema>;
@@ -56,5 +63,6 @@ export type RegisterFormData = z.infer<typeof registerSchema>;
 export type VerifyEmailFormData = z.infer<typeof verifyEmailSchema>;
 export type ConfirmOtpFormData = z.infer<typeof confirmOtpSchema>;
 export type ForgotPasswordFormData = z.infer<typeof forgotPasswordSchema>;
+export type ResetPasswordFormData = z.infer<typeof resetPasswordSchema>;
 export type Gender = z.infer<typeof genderEnum>;
 export type UserRole = z.infer<typeof userRoleEnum>;

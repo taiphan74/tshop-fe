@@ -1,6 +1,6 @@
 import { createAsyncThunk } from '@reduxjs/toolkit';
 import api from '@/common/api';
-import { AuthResponse, LoginCredentials, RegisterData, VerifyEmailRequest, ConfirmOtpRequest, ForgotPasswordRequest } from './types';
+import { AuthResponse, LoginCredentials, RegisterData, VerifyEmailRequest, ConfirmOtpRequest, ForgotPasswordRequest, ResetPasswordRequest } from './types';
 
 // Async thunk for sign in
 export const signIn = createAsyncThunk(
@@ -64,6 +64,19 @@ export const forgotPassword = createAsyncThunk(
       return response.data;
     } catch (error: unknown) {
       return rejectWithValue(error instanceof Error ? error.message : 'Forgot password failed');
+    }
+  }
+);
+
+// Async thunk for reset password
+export const resetPassword = createAsyncThunk(
+  'auth/resetPassword',
+  async (data: ResetPasswordRequest, { rejectWithValue }) => {
+    try {
+      const response = await api.post('/auth/reset-password', data);
+      return response.data;
+    } catch (error: unknown) {
+      return rejectWithValue(error instanceof Error ? error.message : 'Reset password failed');
     }
   }
 );
