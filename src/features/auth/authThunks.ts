@@ -1,6 +1,6 @@
 import { createAsyncThunk } from '@reduxjs/toolkit';
 import api from '@/common/api';
-import { AuthResponse, LoginCredentials, RegisterData } from './types';
+import { AuthResponse, LoginCredentials, RegisterData, VerifyEmailRequest, ConfirmOtpRequest } from './types';
 
 // Async thunk for sign in
 export const signIn = createAsyncThunk(
@@ -25,6 +25,32 @@ export const signUp = createAsyncThunk(
       return response.data as AuthResponse;
     } catch (error: unknown) {
       return rejectWithValue(error instanceof Error ? error.message : 'Sign up failed');
+    }
+  }
+);
+
+// Async thunk for verify email
+export const verifyEmail = createAsyncThunk(
+  'auth/verifyEmail',
+  async (data: VerifyEmailRequest, { rejectWithValue }) => {
+    try {
+      const response = await api.post('/auth/verify-email', data);
+      return response.data;
+    } catch (error: unknown) {
+      return rejectWithValue(error instanceof Error ? error.message : 'Verify email failed');
+    }
+  }
+);
+
+// Async thunk for confirm OTP
+export const confirmOtp = createAsyncThunk(
+  'auth/confirmOtp',
+  async (data: ConfirmOtpRequest, { rejectWithValue }) => {
+    try {
+      const response = await api.post('/auth/verify-email/confirm', data);
+      return response.data;
+    } catch (error: unknown) {
+      return rejectWithValue(error instanceof Error ? error.message : 'Confirm OTP failed');
     }
   }
 );

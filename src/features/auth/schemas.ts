@@ -33,9 +33,22 @@ export const registerSchema = z.object({
   password: z.string(),
 });
 
+// Verify email schema
+export const verifyEmailSchema = z.object({
+  email: z.string().email('Email không hợp lệ'),
+});
+
+// Confirm OTP schema
+export const confirmOtpSchema = z.object({
+  email: z.string().email('Email không hợp lệ'),
+  otp: z.string().min(6, 'OTP phải có ít nhất 6 ký tự'),
+});
+
 // Type exports
 export type User = z.infer<typeof userSchema>;
 export type LoginFormData = z.infer<typeof loginSchema>;
 export type RegisterFormData = z.infer<typeof registerSchema>;
+export type VerifyEmailFormData = z.infer<typeof verifyEmailSchema>;
+export type ConfirmOtpFormData = z.infer<typeof confirmOtpSchema>;
 export type Gender = z.infer<typeof genderEnum>;
 export type UserRole = z.infer<typeof userRoleEnum>;

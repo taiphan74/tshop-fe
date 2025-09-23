@@ -7,17 +7,30 @@ import { Input } from "@/components/ui/input";
 import Logo from "@/components/logo";
 import { signIn } from "@/features/auth/authThunks";
 import { useAppDispatch, useAppSelector } from "@/common/store/hooks";
+import { loginSchema } from "@/features/auth/schemas";
 import Link from "next/link";
 
 export default function SignIn() {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
+  const [formError, setFormError] = useState("");
   const dispatch = useAppDispatch();
   const router = useRouter();
   const { isLoading, error } = useAppSelector((state) => state.auth);
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
+    
+    const result = loginSchema.safeParse({ email, password });
+    if (!result.success) {
+      // Set error to the first validation error
+      setFormError(result.error.issues[0].message);
+      return;
+    }
+    
+    // Clear form error
+    setFormError("");
+    
     try {
       await dispatch(signIn({ email, password })).unwrap();
       router.push("/");
@@ -59,6 +72,9 @@ export default function SignIn() {
           </div>
           {error && (
             <div className="text-red-600 text-sm text-center">{error}</div>
+          )}
+          {formError && (
+            <div className="text-red-600 text-sm text-center">{formError}</div>
           )}
           <div>
             <Button

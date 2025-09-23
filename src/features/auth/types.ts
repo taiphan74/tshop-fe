@@ -42,6 +42,15 @@ export interface RegisterData {
   password: string;
 }
 
+export interface VerifyEmailRequest {
+  email: string;
+}
+
+export interface ConfirmOtpRequest {
+  email: string;
+  otp: string;
+}
+
 export interface AuthResponse {
   user: User;
   access_token: string;

@@ -6,6 +6,7 @@ import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { signUp } from "@/features/auth/authThunks";
 import { useAppDispatch, useAppSelector } from "@/common/store/hooks";
+import { registerSchema } from "@/features/auth/schemas";
 import Logo from "@/components/logo";
 import Link from "next/link";
 
@@ -23,6 +24,13 @@ export default function SignUp() {
     
     // Clear previous form errors
     setFormError("");
+    
+    // Validate with schema
+    const result = registerSchema.safeParse({ email, password });
+    if (!result.success) {
+      setFormError(result.error.issues[0].message);
+      return;
+    }
     
     // Validate passwords match
     if (password !== confirmPassword) {
