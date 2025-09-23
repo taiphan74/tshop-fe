@@ -5,14 +5,55 @@ import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import Logo from "@/components/logo";
 import Link from "next/link";
+import { useAppDispatch, useAppSelector } from "@/common/store/hooks";
+import { forgotPassword, confirmOtp } from "@/features/auth/authThunks";
+import { forgotPasswordSchema, confirmOtpSchema } from "@/features/auth/schemas";
+import { z } from "zod";
 
 export default function ForgotPassword() {
   const [email, setEmail] = useState("");
   const [otp, setOtp] = useState("");
+  const [sendCodeLoading, setSendCodeLoading] = useState(false);
+  const [validationErrors, setValidationErrors] = useState<{email?: string; otp?: string}>({});
 
-  const handleSubmit = (e: React.FormEvent) => {
+  const dispatch = useAppDispatch();
+  const { isLoading, error } = useAppSelector((state) => state.auth);
+
+  const handleSendCode = async () => {
+    try {
+      // Validate email
+      forgotPasswordSchema.parse({ email });
+      setValidationErrors({});
+
+      setSendCodeLoading(true);
+      await dispatch(forgotPassword({ email })).unwrap();
+    } catch (error) {
+      if (error instanceof z.ZodError) {
+        setValidationErrors({ email: error.issues[0].message });
+      }
+    } finally {
+      setSendCodeLoading(false);
+    }
+  };
+
+  const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
-    // No logic implemented
+    try {
+      // Validate both email and otp
+      confirmOtpSchema.parse({ email, otp });
+      setValidationErrors({});
+
+      await dispatch(confirmOtp({ email, otp })).unwrap();
+    } catch (error) {
+      if (error instanceof z.ZodError) {
+        const errors: {email?: string; otp?: string} = {};
+        error.issues.forEach((err) => {
+          if (err.path[0] === 'email') errors.email = err.message;
+          if (err.path[0] === 'otp') errors.otp = err.message;
+        });
+        setValidationErrors(errors);
+      }
+    }
   };
 
   return (
@@ -32,35 +73,45 @@ export default function ForgotPassword() {
                 onChange={(e) => setEmail(e.target.value)}
                 className="mt-1 h-12 rounded-lg"
               />
+              {validationErrors.email && (
+                <p className="text-red-600 text-sm mt-1">{validationErrors.email}</p>
+              )}
             </div>
             <div className="flex justify-between space-x-2">
+              <div className="flex-1">
                 <Input
-                id="otp"
-                name="otp"
-                type="text"
-                required
-                placeholder="Mã OTP"
-                value={otp}
-                onChange={(e) => setOtp(e.target.value)}
-                className="h-12 rounded-lg"
+                  id="otp"
+                  name="otp"
+                  type="text"
+                  required
+                  placeholder="Mã OTP"
+                  value={otp}
+                  onChange={(e) => setOtp(e.target.value)}
+                  className="h-12 rounded-lg"
                 />
+                {validationErrors.otp && (
+                  <p className="text-red-600 text-sm mt-1">{validationErrors.otp}</p>
+                )}
+              </div>
               <Button
                 type="button"
                 variant="ghost"
                 className="h-12 px-4 rounded-lg"
+                onClick={handleSendCode}
+                disabled={sendCodeLoading}
               >
-                Gửi mã
+                {sendCodeLoading ? "Đang gửi..." : "Gửi mã"}
               </Button>
             </div>
           </div>
-          {/* {error && (
-        <div className="text-red-600 text-sm text-center">
-          {error}
-        </div>
-        )} */}
+          {error && (
+            <div className="text-red-600 text-sm text-center">
+              {error}
+            </div>
+          )}
           <div>
-            <Button type="submit" className="w-full h-12 rounded-lg">
-              Gửi
+            <Button type="submit" className="w-full h-12 rounded-lg" disabled={isLoading}>
+              {isLoading ? "Đang xử lý..." : "Gửi"}
             </Button>
           </div>
           <div className="text-center">

@@ -51,6 +51,10 @@ export interface ConfirmOtpRequest {
   otp: string;
 }
 
+export interface ForgotPasswordRequest {
+  email: string;
+}
+
 export interface AuthResponse {
   user: User;
   access_token: string;
