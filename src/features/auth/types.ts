@@ -28,7 +28,7 @@ export interface AuthError {
     statusCode: number;
     message: string;
     error?: string;
-    details?: any;
+    details?: unknown;
 }
 
 export interface AuthState {

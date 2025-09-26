@@ -1,6 +1,6 @@
 "use client";
 
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { useRouter } from "next/navigation";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
@@ -10,6 +10,7 @@ import { useAppDispatch, useAppSelector } from "@/common/store/hooks";
 import { loginSchema } from "@/features/auth/schemas";
 import Link from "next/link";
 import AuthErrorAlert from "@/features/auth/components/AuthErrorAlert";
+import { clearError } from "@/features/auth/authSlice";
 
 export default function SignIn() {
   const [email, setEmail] = useState("");
@@ -18,6 +19,10 @@ export default function SignIn() {
   const dispatch = useAppDispatch();
   const router = useRouter();
   const { isLoading, error } = useAppSelector((state) => state.auth);
+
+  useEffect(() => {
+    dispatch(clearError());
+  }, [dispatch]);
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
