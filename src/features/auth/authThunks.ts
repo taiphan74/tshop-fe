@@ -1,6 +1,6 @@
 import { createAsyncThunk } from '@reduxjs/toolkit';
 import api from '@/common/api';
-import { AuthResponse, LoginCredentials, RegisterData, VerifyEmailRequest, ConfirmOtpRequest, ForgotPasswordRequest, ResetPasswordRequest } from './types';
+import { AuthResponse, LoginCredentials, RegisterData, VerifyEmailRequest, ConfirmOtpRequest, ForgotPasswordRequest, ResetPasswordRequest, AuthError } from './types';
 
 // Async thunk for sign in
 export const signIn = createAsyncThunk(
@@ -10,8 +10,14 @@ export const signIn = createAsyncThunk(
       const response = await api.post('/auth/sign-in', credentials);
       console.log('Sign in response:', response.data);
       return response.data as AuthResponse;
-    } catch (error: unknown) {
-      return rejectWithValue(error instanceof Error ? error.message : 'Sign in failed');
+    } catch (error: any) {
+      const authError: AuthError = {
+        statusCode: error.response?.status || 500,
+        message: error.response?.data?.message || error.message || 'Sign in failed',
+        error: error.response?.data?.error,
+        details: error.response?.data
+      };
+      return rejectWithValue(authError);
     }
   }
 );
@@ -23,8 +29,14 @@ export const signUp = createAsyncThunk(
     try {
       const response = await api.post('/auth/sign-up', userData);
       return response.data as AuthResponse;
-    } catch (error: unknown) {
-      return rejectWithValue(error instanceof Error ? error.message : 'Sign up failed');
+    } catch (error: any) {
+      const authError: AuthError = {
+        statusCode: error.response?.status || 500,
+        message: error.response?.data?.message || error.message || 'Sign up failed',
+        error: error.response?.data?.error,
+        details: error.response?.data
+      };
+      return rejectWithValue(authError);
     }
   }
 );
@@ -36,8 +48,14 @@ export const verifyEmail = createAsyncThunk(
     try {
       const response = await api.post('/auth/verify-email', data);
       return response.data;
-    } catch (error: unknown) {
-      return rejectWithValue(error instanceof Error ? error.message : 'Verify email failed');
+    } catch (error: any) {
+      const authError: AuthError = {
+        statusCode: error.response?.status || 500,
+        message: error.response?.data?.message || error.message || 'Verify email failed',
+        error: error.response?.data?.error,
+        details: error.response?.data
+      };
+      return rejectWithValue(authError);
     }
   }
 );
@@ -49,8 +67,14 @@ export const confirmOtp = createAsyncThunk(
     try {
       const response = await api.post('/auth/verify-email/confirm', data);
       return response.data;
-    } catch (error: unknown) {
-      return rejectWithValue(error instanceof Error ? error.message : 'Confirm OTP failed');
+    } catch (error: any) {
+      const authError: AuthError = {
+        statusCode: error.response?.status || 500,
+        message: error.response?.data?.message || error.message || 'Confirm OTP failed',
+        error: error.response?.data?.error,
+        details: error.response?.data
+      };
+      return rejectWithValue(authError);
     }
   }
 );
@@ -62,8 +86,14 @@ export const forgotPassword = createAsyncThunk(
     try {
       const response = await api.post('/auth/forgot-password', data);
       return response.data;
-    } catch (error: unknown) {
-      return rejectWithValue(error instanceof Error ? error.message : 'Forgot password failed');
+    } catch (error: any) {
+      const authError: AuthError = {
+        statusCode: error.response?.status || 500,
+        message: error.response?.data?.message || error.message || 'Forgot password failed',
+        error: error.response?.data?.error,
+        details: error.response?.data
+      };
+      return rejectWithValue(authError);
     }
   }
 );
@@ -75,8 +105,14 @@ export const resetPassword = createAsyncThunk(
     try {
       const response = await api.post('/auth/reset-password', data);
       return response.data;
-    } catch (error: unknown) {
-      return rejectWithValue(error instanceof Error ? error.message : 'Reset password failed');
+    } catch (error: any) {
+      const authError: AuthError = {
+        statusCode: error.response?.status || 500,
+        message: error.response?.data?.message || error.message || 'Reset password failed',
+        error: error.response?.data?.error,
+        details: error.response?.data
+      };
+      return rejectWithValue(authError);
     }
   }
 );

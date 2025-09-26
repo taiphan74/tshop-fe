@@ -9,6 +9,7 @@ import { signIn } from "@/features/auth/authThunks";
 import { useAppDispatch, useAppSelector } from "@/common/store/hooks";
 import { loginSchema } from "@/features/auth/schemas";
 import Link from "next/link";
+import AuthErrorAlert from "@/features/auth/components/AuthErrorAlert";
 
 export default function SignIn() {
   const [email, setEmail] = useState("");
@@ -71,7 +72,10 @@ export default function SignIn() {
             </div>
           </div>
           {error && (
-            <div className="text-red-600 text-sm text-center">{error}</div>
+            <AuthErrorAlert
+              error={error}
+              feature="signin"
+            />
           )}
           {formError && (
             <div className="text-red-600 text-sm text-center">{formError}</div>

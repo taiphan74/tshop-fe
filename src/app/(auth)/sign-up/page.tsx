@@ -9,6 +9,7 @@ import { useAppDispatch, useAppSelector } from "@/common/store/hooks";
 import { registerSchema } from "@/features/auth/schemas";
 import Logo from "@/components/logo";
 import Link from "next/link";
+import AuthErrorAlert from "@/features/auth/components/AuthErrorAlert";
 
 export default function SignUp() {
   const [email, setEmail] = useState("");
@@ -89,10 +90,14 @@ export default function SignUp() {
               />
             </div>
           </div>
-          {(error || formError) && (
-            <div className="text-red-600 text-sm text-center">
-              {formError || error}
-            </div>
+          {error && (
+            <AuthErrorAlert
+              error={error}
+              feature="signup"
+            />
+          )}
+          {formError && (
+            <div className="text-red-600 text-sm text-center">{formError}</div>
           )}
           <div>
             <Button

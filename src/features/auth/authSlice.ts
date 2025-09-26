@@ -1,5 +1,5 @@
 import { createSlice, PayloadAction } from "@reduxjs/toolkit";
-import { AuthResponse, AuthState } from "./types";
+import { AuthResponse, AuthState, AuthError } from "./types";
 import { signIn, signUp, forgotPassword, confirmOtp, resetPassword } from "./authThunks";
 
 // Initial state
@@ -43,7 +43,7 @@ const authSlice = createSlice({
       )
       .addCase(signIn.rejected, (state, action) => {
         state.isLoading = false;
-        state.error = action.payload as string;
+        state.error = action.payload as AuthError;
         state.isAuthenticated = false;
         state.user = null;
       })
@@ -64,7 +64,7 @@ const authSlice = createSlice({
       )
       .addCase(signUp.rejected, (state, action) => {
         state.isLoading = false;
-        state.error = action.payload as string;
+        state.error = action.payload as AuthError;
         state.isAuthenticated = false;
         state.user = null;
       })
@@ -78,7 +78,7 @@ const authSlice = createSlice({
       })
       .addCase(forgotPassword.rejected, (state, action) => {
         state.isLoading = false;
-        state.error = action.payload as string;
+        state.error = action.payload as AuthError;
       })
       .addCase(confirmOtp.pending, (state) => {
         state.isLoading = true;
@@ -94,7 +94,7 @@ const authSlice = createSlice({
       })
       .addCase(confirmOtp.rejected, (state, action) => {
         state.isLoading = false;
-        state.error = action.payload as string;
+        state.error = action.payload as AuthError;
         state.isAuthenticated = false;
         state.user = null;
       })
@@ -108,7 +108,7 @@ const authSlice = createSlice({
       })
       .addCase(resetPassword.rejected, (state, action) => {
         state.isLoading = false;
-        state.error = action.payload as string;
+        state.error = action.payload as AuthError;
       });
   },
 });

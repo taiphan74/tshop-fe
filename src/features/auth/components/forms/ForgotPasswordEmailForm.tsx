@@ -11,6 +11,7 @@ import {
   confirmOtpSchema,
 } from "@/features/auth/schemas";
 import { z } from "zod";
+import AuthErrorAlert from "@/features/auth/components/AuthErrorAlert";
 
 interface ForgotPasswordEmailFormProps {
   email: string;
@@ -124,7 +125,12 @@ export default function ForgotPasswordEmailForm({
           </Button>
         </div>
       </div>
-      {error && <div className="text-red-600 text-sm text-center">{error}</div>}
+      {error && (
+        <AuthErrorAlert
+          error={error}
+          feature={otp ? "verify-otp" : "forgot-password"}
+        />
+      )}
       <div>
         <Button
           type="submit"

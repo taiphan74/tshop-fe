@@ -2,8 +2,8 @@
 
 import { useState } from "react";
 import Logo from "@/components/logo";
-import ForgotPasswordEmailForm from "@/features/auth/forms/ForgotPasswordEmailForm";
-import ForgotPasswordResetForm from "@/features/auth/forms/ForgotPasswordResetForm";
+import ForgotPasswordEmailForm from "@/features/auth/components/forms/ForgotPasswordEmailForm";
+import ForgotPasswordResetForm from "@/features/auth/components/forms/ForgotPasswordResetForm";
 
 type Step = "email-otp" | "reset-password";
 
