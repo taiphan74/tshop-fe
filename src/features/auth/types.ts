@@ -24,11 +24,18 @@ export interface User {
     last_login?: Date;
 }
 
+export interface AuthError {
+    statusCode: number;
+    message: string;
+    error?: string;
+    details?: unknown;
+}
+
 export interface AuthState {
   user: User | null;
   access_token: string | null;
   isLoading: boolean;
-  error: string | null;
+  error: AuthError | null;
   isAuthenticated: boolean;
 }
 

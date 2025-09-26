@@ -1,6 +1,6 @@
 "use client";
 
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { useRouter } from "next/navigation";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
@@ -9,6 +9,8 @@ import { signIn } from "@/features/auth/authThunks";
 import { useAppDispatch, useAppSelector } from "@/common/store/hooks";
 import { loginSchema } from "@/features/auth/schemas";
 import Link from "next/link";
+import AuthErrorAlert from "@/features/auth/components/AuthErrorAlert";
+import { clearError } from "@/features/auth/authSlice";
 
 export default function SignIn() {
   const [email, setEmail] = useState("");
@@ -16,7 +18,11 @@ export default function SignIn() {
   const [formError, setFormError] = useState("");
   const dispatch = useAppDispatch();
   const router = useRouter();
-  const { isLoading, error } = useAppSelector((state) => state.auth);
+  const { isLoading, error, user } = useAppSelector((state) => state.auth);
+
+  useEffect(() => {
+    dispatch(clearError());
+  }, [dispatch]);
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
@@ -33,7 +39,11 @@ export default function SignIn() {
     
     try {
       await dispatch(signIn({ email, password })).unwrap();
-      router.push("/");
+      if (user && !user.is_email_verified) {
+        router.push(`/verify-email?email=${encodeURIComponent(user.email)}`);
+      } else {
+        router.push("/");
+      }
     } catch {
       // Error is handled in the slice
     }
@@ -71,7 +81,10 @@ export default function SignIn() {
             </div>
           </div>
           {error && (
-            <div className="text-red-600 text-sm text-center">{error}</div>
+            <AuthErrorAlert
+              error={error}
+              feature="signin"
+            />
           )}
           {formError && (
             <div className="text-red-600 text-sm text-center">{formError}</div>

@@ -1,9 +1,11 @@
 "use client";
 
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import Logo from "@/components/logo";
-import ForgotPasswordEmailForm from "@/features/auth/forms/ForgotPasswordEmailForm";
-import ForgotPasswordResetForm from "@/features/auth/forms/ForgotPasswordResetForm";
+import ForgotPasswordEmailForm from "@/features/auth/components/forms/ForgotPasswordEmailForm";
+import ForgotPasswordResetForm from "@/features/auth/components/forms/ForgotPasswordResetForm";
+import { useAppDispatch } from "@/common/store/hooks";
+import { clearError } from "@/features/auth/authSlice";
 
 type Step = "email-otp" | "reset-password";
 
@@ -13,6 +15,11 @@ export default function ForgotPassword() {
   const [otp, setOtp] = useState("");
   const [password, setPassword] = useState("");
   const [confirmPassword, setConfirmPassword] = useState("");
+  const dispatch = useAppDispatch();
+
+  useEffect(() => {
+    dispatch(clearError());
+  }, [dispatch]);
 
   const handleNextStep = () => {
     setCurrentStep("reset-password");

@@ -8,6 +8,7 @@ import { useAppDispatch, useAppSelector } from "@/common/store/hooks";
 import { resetPassword } from "@/features/auth/authThunks";
 import { resetPasswordSchema } from "@/features/auth/schemas";
 import { z } from "zod";
+import AuthErrorAlert from "@/features/auth/components/AuthErrorAlert";
 
 interface ForgotPasswordResetFormProps {
   email: string;
@@ -152,7 +153,12 @@ export default function ForgotPasswordResetForm({
           )}
         </div>
       </div>
-      {error && <div className="text-red-600 text-sm text-center">{error}</div>}
+      {error && (
+        <AuthErrorAlert
+          error={error}
+          feature="reset-password"
+        />
+      )}
       <div>
         <Button
           type="submit"

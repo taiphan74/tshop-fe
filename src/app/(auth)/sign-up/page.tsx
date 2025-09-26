@@ -1,6 +1,6 @@
 "use client";
 
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { useRouter } from "next/navigation";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
@@ -9,6 +9,8 @@ import { useAppDispatch, useAppSelector } from "@/common/store/hooks";
 import { registerSchema } from "@/features/auth/schemas";
 import Logo from "@/components/logo";
 import Link from "next/link";
+import AuthErrorAlert from "@/features/auth/components/AuthErrorAlert";
+import { clearError } from "@/features/auth/authSlice";
 
 export default function SignUp() {
   const [email, setEmail] = useState("");
@@ -18,6 +20,10 @@ export default function SignUp() {
   const dispatch = useAppDispatch();
   const router = useRouter();
   const { isLoading, error } = useAppSelector((state) => state.auth);
+
+  useEffect(() => {
+    dispatch(clearError());
+  }, [dispatch]);
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
@@ -40,7 +46,7 @@ export default function SignUp() {
     
     try {
       await dispatch(signUp({ email, password })).unwrap();
-      router.push("/");
+      router.push(`/verify-email?email=${encodeURIComponent(email)}`);
     } catch {
       // Error is handled in the slice
     }
@@ -89,10 +95,14 @@ export default function SignUp() {
               />
             </div>
           </div>
-          {(error || formError) && (
-            <div className="text-red-600 text-sm text-center">
-              {formError || error}
-            </div>
+          {error && (
+            <AuthErrorAlert
+              error={error}
+              feature="signup"
+            />
+          )}
+          {formError && (
+            <div className="text-red-600 text-sm text-center">{formError}</div>
           )}
           <div>
             <Button
