@@ -46,7 +46,7 @@ export default function SignUp() {
     
     try {
       await dispatch(signUp({ email, password })).unwrap();
-      router.push("/");
+      router.push(`/verify-email?email=${encodeURIComponent(email)}`);
     } catch {
       // Error is handled in the slice
     }

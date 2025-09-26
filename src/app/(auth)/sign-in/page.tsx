@@ -18,7 +18,7 @@ export default function SignIn() {
   const [formError, setFormError] = useState("");
   const dispatch = useAppDispatch();
   const router = useRouter();
-  const { isLoading, error } = useAppSelector((state) => state.auth);
+  const { isLoading, error, user } = useAppSelector((state) => state.auth);
 
   useEffect(() => {
     dispatch(clearError());
@@ -39,7 +39,11 @@ export default function SignIn() {
     
     try {
       await dispatch(signIn({ email, password })).unwrap();
-      router.push("/");
+      if (user && !user.is_email_verified) {
+        router.push(`/verify-email?email=${encodeURIComponent(user.email)}`);
+      } else {
+        router.push("/");
+      }
     } catch {
       // Error is handled in the slice
     }
